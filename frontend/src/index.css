@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Prata&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Show hr inside active anchor */
+a.active hr {
+  display: block;
+}
+
+/* Apply Outfit font globally */
+* {
+  font-family: 'Outfit', sans-serif;
+}
+
+/* Prata font class */
+.prata-regular {
+  font-family: "Prata", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* Mobile styles */
+@media (max-width: 640px) {
+  a.active {
+    background-color: black;
+    color: white;
+  }
+}
