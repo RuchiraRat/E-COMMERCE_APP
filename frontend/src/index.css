@@ -23,7 +23,7 @@ a.active hr {
 /* Mobile styles */
 @media (max-width: 640px) {
   a.active {
-    background-color: black;
-    color: white;
+    background-color: transparent !important;
+    color: black !important;
   }
 }
