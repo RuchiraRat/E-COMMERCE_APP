@@ -1,10 +1,13 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { assets } from '../assets/assets'
 import { NavLink } from 'react-router-dom'
+import { ShopContext } from '../context/ShopContext'
 
 const Navbar = () => {
   // State for profile dropdown
   const [showProfileDropdown, setShowProfileDropdown] = useState(false)
+
+  const {setShowSearch} = useContext(ShopContext);
 
   // State for mobile sidebar
   const [showSidebar, setShowSidebar] = useState(false)
@@ -43,7 +46,7 @@ const Navbar = () => {
       {/* Right Icons */}
       <div className='flex items-center gap-6'>
         {/* Search Icon */}
-        <img src={assets.search_icon} className='w-6 h-6 cursor-pointer' alt="search" />
+        <img onClick={()=>setShowSearch(true)} src={assets.search_icon} className='w-6 h-6 cursor-pointer' alt="search" />
 
         {/* Profile Icon with dropdown */}
         <div className='relative'>
