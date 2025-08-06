@@ -1,3 +1,4 @@
+
 // src/components/ProductItem.jsx
 import React, { useContext } from 'react'; // Import React and useContext hook
 import { ShopContext } from '../context/ShopContext'; // Import shared context for currency etc.
