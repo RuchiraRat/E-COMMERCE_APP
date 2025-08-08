@@ -3,14 +3,17 @@ import { useParams } from 'react-router-dom';
 import { ShopContext } from '../context/ShopContext';
 import { assets } from '../assets/assets';
 import RelatedProducts from '../components/RelatedProducts';
+import toast from 'react-hot-toast';
 
 const Product = () => {
-  const { productId } = useParams();  // lowercase to match route param
+  const { productId } = useParams();
   const { products, addToCart } = useContext(ShopContext);
+
   const [productData, setProductData] = useState(null);
   const [image, setImage] = useState('');
-  const [size,setSize] = useState ('')
+  const [size, setSize] = useState('');
 
+  // Load product data on mount or when productId/products change
   useEffect(() => {
     if (products && products.length > 0) {
       const foundProduct = products.find(item => item._id === productId);
@@ -24,7 +27,19 @@ const Product = () => {
     }
   }, [productId, products]);
 
-  if (productData === null) {
+  // Handle add to cart with validation
+  const handleAddToCart = () => {
+    if (!size) {
+      toast.error("Please select a size before adding to cart."); // ✅ This should now show
+      console.log("Size not selected");  // Debug check
+      return; // Exit if size is not selected
+    }
+
+    addToCart(productData._id, size);
+    console.log({ [productData._id]: { [size]: 1 } }); // Match YouTube-style log
+  };
+
+  if (!productData) {
     return (
       <div style={{ padding: '2rem' }}>
         Product not found or loading...
@@ -63,28 +78,43 @@ const Product = () => {
         {/* Product Details */}
         <div className="flex-1">
           <h1 className="text-2xl font-bold">{productData.name}</h1>
-          <div className='flex items-center gap-1 mt-2'>
-              <img src={assets.star_icon} alt="" className="w-3 5" />
-              <img src={assets.star_icon} alt="" className="w-3 5" />
-              <img src={assets.star_icon} alt="" className="w-3 5" />
-              <img src={assets.star_icon} alt="" className="w-3 5" />
-              <img src={assets.star_dull_icon} alt="" className="w-3 5" />
-              <p className='pl-2'>(122)</p>
+          <div className="flex items-center gap-1 mt-2">
+            {[...Array(4)].map((_, i) => (
+              <img key={i} src={assets.star_icon} alt="star" className="w-3.5" />
+            ))}
+            <img src={assets.star_dull_icon} alt="star" className="w-3.5" />
+            <p className="pl-2">(122)</p>
           </div>
+
           <p className="text-lg mt-4">{productData.description}</p>
           <p className="text-xl font-semibold mt-6">Rs. {productData.price}</p>
-          {/* You can add buttons, add to cart etc here */}
-          <div className='flex flex-col gap-4 my-8'>
-              <p>Select Size</p>
-              <div className='flex gap-2'>
-                {productData.sizes.map((item,index)=>(
-                  <button onClick={()=>setSize(item)} className={`border py-2 px-4 bg-gray-100 ${item === size ? 'border-orange-500' : ''}`} key={index}>{item}</button>
-                ))}
-              </div>
+
+          {/* Size Selector */}
+          <div className="flex flex-col gap-4 my-8">
+            <p>Select Size</p>
+            <div className="flex gap-2">
+              {productData.sizes.map((item, index) => (
+                <button
+                  onClick={() => setSize(item)}
+                  className={`border py-2 px-4 bg-gray-100 ${item === size ? 'border-orange-500' : ''}`}
+                  key={index}
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
           </div>
-          <button onClick={()=>addToCart(productData._id,size)} className='bg-black text-white px-8 py-3 text-sm active:bg-gray-700'>ADD TO CART</button>
-          <hr className='mt-8 sm:w-4/5' />
-          <div className='text-sm text-gray-500 mt-5 flex flex-col gap-1'>
+
+          {/* Add to Cart Button */}
+          <button
+            onClick={handleAddToCart}
+            className="bg-black text-white px-8 py-3 text-sm active:bg-gray-700"
+          >
+            ADD TO CART
+          </button>
+
+          <hr className="mt-8 sm:w-4/5" />
+          <div className="text-sm text-gray-500 mt-5 flex flex-col gap-1">
             <p>100% Original product</p>
             <p>Cash on Delivery is available on this product</p>
             <p>Easy return and exchange policy within 7 days.</p>
@@ -92,32 +122,22 @@ const Product = () => {
         </div>
       </div>
 
-
-      {/* --------------Description and Review Section----------------- */}
-      <div className='mt-20'>
-        <div className='flex'>
-          <b className='border px-5 py-3 text-sm'>Description</b>
-          <p className='border px-5 py-3 text-sm'>Reviews (122)</p>
+      {/* Description & Reviews */}
+      <div className="mt-20">
+        <div className="flex">
+          <b className="border px-5 py-3 text-sm">Description</b>
+          <p className="border px-5 py-3 text-sm">Reviews (122)</p>
         </div>
-         <div className='flex flex-col gap-4 border px-6 py-6 text-sm text-gray-500'>
-              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
-                Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-                when an unknown printer took a galley of type and scrambled it to make a type specimen book. 
-                It has survived not only five centuries.</p>
-
-              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
-                Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-                when an unknown printer took a galley of type and scrambled it to make a type specimen book. 
-                It has survived not only five centuries.</p>
-         </div>
+        <div className="flex flex-col gap-4 border px-6 py-6 text-sm text-gray-500">
+          <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry...</p>
+          <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry...</p>
+        </div>
       </div>
 
-                {/* ------ display related products -------- */}
-
-                <RelatedProducts category={productData.category} subCategory={productData.subCategory} />
-
+      {/* Related Products */}
+      <RelatedProducts category={productData.category} subCategory={productData.subCategory} />
     </div>
-  ) ; 
-}
+  );
+};
 
 export default Product;

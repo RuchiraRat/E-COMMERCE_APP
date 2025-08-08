@@ -1,5 +1,6 @@
 import React, { createContext, useEffect, useState } from "react";
 import { products } from "../assets/assets";
+import toast from 'react-hot-toast';
 
 export const ShopContext = createContext();
 
@@ -7,34 +8,48 @@ const ShopProvider = ({ children }) => {
   const currency = "Rs";
   const delivery_fee = 300;
 
-  // Correct useState hook usage
+  // State declarations
   const [search, setSearch] = useState('');
   const [showSearch, setShowSearch] = useState(false);
   const [cartItems, setCartItems] = useState({});
 
-  const addToCart = async (itemId,size) => {
+  // ✅ Function to add items to cart
+  const addToCart = async (itemId, size) => {
+    let cartData = structuredClone(cartItems); // Clone to avoid direct mutation
 
-    let cartData = structuredClone(cartItems);
+    if (!size) {
+      toast.error("Please select a size before adding to cart.");
+      return; // Exit if size is not selected
+    }
 
-    if (cartData[itemId]){
+
+    if (cartData[itemId]) {
       if (cartData[itemId][size]) {
         cartData[itemId][size] += 1;
-      }
-      else {
+      } else {
         cartData[itemId][size] = 1;
       }
-    }
-    else{
+    } else {
       cartData[itemId] = {};
       cartData[itemId][size] = 1;
     }
 
-  }
+    setCartItems(cartData); // ✅ Update state
+  };
 
-  useEffect(()=>{
-    console.log(cartItems);
-  },[cartItems])
+  const getCartCount = () => {
+    let totalCount = 0;
+    for (const itemId in cartItems) {
+      for (const size in cartItems[itemId]) {
+        if (cartItems[itemId][size] > 0) {
+          totalCount += cartItems[itemId][size];
+        }
+      }
+    }
+    return totalCount;
+  };
 
+  // Value provided to context consumers
   const value = {
     products,
     currency,
@@ -43,7 +58,9 @@ const ShopProvider = ({ children }) => {
     setSearch,
     showSearch,
     setShowSearch,
-    cartItems,addToCart
+    cartItems,
+    addToCart,
+    getCartCount,
   };
 
   return (

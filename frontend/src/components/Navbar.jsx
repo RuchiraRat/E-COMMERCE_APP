@@ -7,7 +7,7 @@ const Navbar = () => {
   // State for profile dropdown
   const [showProfileDropdown, setShowProfileDropdown] = useState(false)
 
-  const {setShowSearch} = useContext(ShopContext);
+  const {setShowSearch , getCartCount} = useContext(ShopContext);
 
   // State for mobile sidebar
   const [showSidebar, setShowSidebar] = useState(false)
@@ -72,7 +72,7 @@ const Navbar = () => {
         {/* Cart Icon */}
         <NavLink to='/cart' className='relative'>
           <img src={assets.cart_icon} className='w-5 h-5 cursor-pointer' alt="cart" />
-          <p className='absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center'>0</p>
+          <p className='absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center'>{getCartCount()}</p>
         </NavLink>
 
         {/* Hamburger menu for small screens */}
