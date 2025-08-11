@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { assets } from '../assets/assets'
-import { NavLink } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import { ShopContext } from '../context/ShopContext'
 
 const Navbar = () => {
@@ -50,12 +50,12 @@ const Navbar = () => {
 
         {/* Profile Icon with dropdown */}
         <div className='relative'>
-          <img
+          <Link to='/login'><img
             src={assets.profile_icon}
             className='w-6 h-6 cursor-pointer'
             alt="profile"
             onClick={toggleDropdown} // toggle profile menu on click
-          />
+          /></Link>
 
           {/* Profile Dropdown (visible only when showProfileDropdown is true) */}
           {showProfileDropdown && (
