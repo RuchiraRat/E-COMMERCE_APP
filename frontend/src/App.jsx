@@ -13,7 +13,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import SearchBar from './components/SearchBar';
 import { Toaster } from 'react-hot-toast';
-import NotFound from './components/NotFound';
+
 
 
 const App = () => {
@@ -35,8 +35,7 @@ const App = () => {
           <Route path='/login' element={<Login />} />
           <Route path='/place-order' element={<PlaceOrder />} />
           <Route path='/orders' element={<Orders />} />
-          <Route path="/not-found" element={<NotFound />} />
-          <Route path="*" element={<NotFound />} /> {/* Catch-all for unknown URLs */}
+          
         </Routes>
         
         <Footer />
